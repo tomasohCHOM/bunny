@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Threlte</title>
+  <title>Bunny Detour :)</title>
 </svelte:head>
 
 <div class="scene">
@@ -10,6 +10,5 @@
   .scene {
     position: absolute;
     inset: 0;
-    background: radial-gradient(hsl(220 14% 20%), hsl(220 20% 10%));
   }
 </style>
