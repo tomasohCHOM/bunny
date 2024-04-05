@@ -1,81 +1,40 @@
 <script lang="ts">
-  import { T } from '@threlte/core'
-  import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
+  import { T } from "@threlte/core";
+  import { Grid, OrbitControls, TransformControls } from "@threlte/extras";
+  import * as Three from "three";
+  import { DEG2RAD } from "three/src/math/MathUtils";
 </script>
 
-<T.PerspectiveCamera
-  makeDefault
-  position={[-10, 10, 10]}
-  fov={15}
->
-  <OrbitControls
-    autoRotate
-    enableZoom={false}
-    enableDamping
-    autoRotateSpeed={0.5}
-    target.y={1.5}
-  />
+<!-- Grid -->
+<Grid cellColor="#808080" sectionSize={0} />
+
+<!-- Camera -->
+<T.PerspectiveCamera position={[20, 20, 20]} fov={50} makeDefault>
+  <!-- Controls -->
+  <OrbitControls enableDamping />
 </T.PerspectiveCamera>
 
+<!-- Lights the scene equally -->
+<T.AmbientLight color="#ffffff" intensity={0.2} />
+
+<!-- Light that casts a shadow -->
 <T.DirectionalLight
-  intensity={0.8}
-  position.x={5}
-  position.y={10}
-/>
-<T.AmbientLight intensity={0.2} />
-
-<Grid
-  position.y={-0.001}
-  cellColor="#ffffff"
-  sectionColor="#ffffff"
-  sectionThickness={0}
-  fadeDistance={25}
-  cellSize={2}
+  color="#ffffff"
+  intensity={2}
+  position={[10, 10, 0]}
+  shadow.camera.top={8}
+  castShadow
 />
 
-<ContactShadows
-  scale={10}
-  blur={2}
-  far={2.5}
-  opacity={0.5}
-/>
+<!-- Sphere -->
+<T.Mesh position={[0, 4, 0]} let:ref castShadow>
+  <T.SphereGeometry args={[4, 64, 64]} />
+  <T.MeshStandardMaterial color="#ffffff" />
+  <TransformControls object={ref} />
+</T.Mesh>
 
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position.y={1.2}
-    position.z={-0.75}
-  >
-    <T.BoxGeometry />
-    <T.MeshStandardMaterial color="#0059BA" />
-  </T.Mesh>
-</Float>
-
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position={[1.2, 1.5, 0.75]}
-    rotation.x={5}
-    rotation.y={71}
-  >
-    <T.TorusKnotGeometry args={[0.5, 0.15, 100, 12, 2, 3]} />
-    <T.MeshStandardMaterial color="#F85122" />
-  </T.Mesh>
-</Float>
-
-<Float
-  floatIntensity={1}
-  floatingRange={[0, 1]}
->
-  <T.Mesh
-    position={[-1.4, 1.5, 0.75]}
-    rotation={[-5, 128, 10]}
-  >
-    <T.IcosahedronGeometry />
-    <T.MeshStandardMaterial color="#F8EBCE" />
-  </T.Mesh>
-</Float>
+<!-- Floor -->
+<T.Mesh rotation.x={DEG2RAD * 90} receiveShadow>
+  <T.PlaneGeometry args={[20, 20]} />
+  <T.MeshStandardMaterial color="#ffffff" side={Three.DoubleSide} />
+</T.Mesh>
