@@ -2,6 +2,26 @@
   import { T } from "@threlte/core";
   import { OrbitControls, useGltf } from "@threlte/extras";
   import * as Three from "three";
+
+  const GRASS_BOUNDARY = 10;
+  const TREE_BOUNDARY = 7;
+
+  function getRandom(boundary: number) {
+    let min = -1 * boundary;
+    let max = boundary;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  let grassPositions = Array.from({ length: 10 }, () => [
+    getRandom(GRASS_BOUNDARY),
+    0.5,
+    getRandom(GRASS_BOUNDARY),
+  ]);
+  let treePositions = Array.from({ length: 2 }, () => [
+    getRandom(TREE_BOUNDARY),
+    0.5,
+    getRandom(TREE_BOUNDARY),
+  ]);
 </script>
 
 <!-- Camera -->
@@ -31,10 +51,14 @@
   <T is={bunny.scene} position={[0, 0.5, 0]} scale={0.5} />
 {/await}
 
-{#await useGltf("/assets/purple-grass.glb") then purpleGrass}
-  <T is={purpleGrass.scene} position={[-10, 0.5, 0]} scale={4} />
-{/await}
+{#each grassPositions as grassPosition}
+  {#await useGltf("/assets/purple-grass.glb") then purpleGrass}
+    <T is={purpleGrass.scene.clone()} position={grassPosition} scale={2.5} />
+  {/await}
+{/each}
 
-{#await useGltf("/assets/tree.glb") then tree}
-  <T is={tree.scene} position={[10, 0.5, -4]} scale={2} />
-{/await}
+{#each treePositions as treePosition}
+  {#await useGltf("/assets/tree.glb") then tree}
+    <T is={tree.scene.clone()} position={treePosition} scale={1.8} />
+  {/await}
+{/each}
